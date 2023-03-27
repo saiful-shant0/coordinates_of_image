@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Click Coordinates</title>
+    <style>
+      /* Style for the clicked points */
+      .point {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div align="center">
+      <img src="./123.jpg" alt="Image" />
+      <div id="coords"></div>
+      <button id="undo-btn" disabled>Undo</button>
+    </div>
+    <script>
+      // Get the image element, the paragraph element, and the buttons
+      const image = document.querySelector("img");
+      const coords = document.querySelector("#coords");
+      const undoBtn = document.querySelector("#undo-btn");
+
+      // Initialize an array to store the clicked points
+      let points = [];
+
+      // Initialize a counter variable to keep track of the number of clicks
+      let clickCounter = 0;
+
+      // Add a click event listener to the image
+      image.addEventListener("click", (event) => {
+        // Check if the counter is less than 4
+        if (clickCounter < 4) {
+          // Increment the counter
+          clickCounter++;
+
+          // Get the x and y coordinates of the click event relative to the image
+          const x = event.offsetX;
+          const y = event.offsetY;
+
+          // Create a new element for the clicked point and set its position
+          const point = document.createElement("div");
+          point.className = "point";
+          point.style.left = `${x}px`;
+          point.style.top = `${y}px`;
+
+          // Create a p tag for the point coordinates and append it to the point element
+          const p = document.createElement("p");
+          p.textContent = `Clicked at (${x}, ${y})`;
+          p.style.position = "absolute";
+          p.style.left = `${x}px`;
+          p.style.top = `${y}px`;
+          p.style.backgroundColor = "red";
+          p.style.color = "white";
+          p.style.fontSize = "12px";
+          p.style.padding = "5px";
+          p.style.borderRadius = "5px";
+          point.appendChild(p);
+
+          // Add the point element to the image container and the points array
+          image.parentNode.appendChild(point);
+          points.push(point);
+
+          // Enable the undo button
+          undoBtn.disabled = false;
+
+          // Create a new p element and set its text content to the coordinates
+          //   const p = document.createElement("p");
+          //   p.textContent = `Clicked at (${x}, ${y})`;
+
+          // Add the p element to the coords element
+          coords.appendChild(p);
+        }
+      });
+
+      // Add a click event listener to the undo button
+      undoBtn.addEventListener("click", () => {
+        // Remove the last clicked point from the image and the points array
+        const lastPoint = points.pop();
+        lastPoint.remove();
+
+        // Decrement the click counter
+        clickCounter--;
+
+        // Disable the undo button if there are no more points to remove
+        if (points.length === 0) {
+          undoBtn.disabled = true;
+        }
+
+        // Remove the last paragraph from the coords element
+        coords.lastChild.remove();
+      });
+    </script>
+  </body>
+</html>
